@@ -1,14 +1,24 @@
+# Define variables
+$repoUrl = "https://github.com/MrOlof/terminal-configs.git"
+$repoPath = "$HOME\terminal-configs"
+$nvimConfigPath = "$HOME\AppData\Local\nvim"
+$powershellConfigPath = "$HOME\Documents\PowerShell"
+$terminalSettingsPath = "$HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+$fontInstallPath = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+
 # Clone the repository
-git clone https://github.com/MrOlof/terminal-configs.git
+if (-not (Test-Path -Path $repoPath)) {
+    git clone $repoUrl $repoPath
+}
 
 # Copy Neovim configuration
-New-Item -ItemType Directory -Force -Path $HOME\AppData\Local\nvim
-Copy-Item -Force $HOME\terminal-configs\nvim\init.vim -Destination $HOME\AppData\Local\nvim\init.vim
+New-Item -ItemType Directory -Force -Path $nvimConfigPath
+Copy-Item -Force "$repoPath\nvim\init.vim" -Destination "$nvimConfigPath\init.vim"
 
 # Copy PowerShell profile and custom oh-my-posh JSON
-New-Item -ItemType Directory -Force -Path $HOME\Documents\PowerShell
-Copy-Item -Force $HOME\terminal-configs\powershell\Microsoft.PowerShell_profile.ps1 -Destination $HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
-Copy-Item -Force $HOME\terminal-configs\powershell\myprofile.omp.json -Destination $HOME\Documents\PowerShell\myprofile.omp.json
+New-Item -ItemType Directory -Force -Path $powershellConfigPath
+Copy-Item -Force "$repoPath\powershell\Microsoft.PowerShell_profile.ps1" -Destination "$powershellConfigPath\Microsoft.PowerShell_profile.ps1"
+Copy-Item -Force "$repoPath\powershell\myprofile.omp.json" -Destination "$powershellConfigPath\myprofile.omp.json"
 
 # Install Neovim (example for Windows - assuming Chocolatey is installed)
 choco install neovim -y
@@ -18,23 +28,18 @@ Install-Module -Name oh-my-posh -Scope CurrentUser -Force
 Install-Module -Name posh-git -Scope CurrentUser -Force
 Install-Module -Name Terminal-Icons -Scope CurrentUser -Force
 
-# Install CascadiaMono Nerd Font
-$nerdFontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/CascadiaMono.zip"
-$tempPath = "$env:TEMP\CascadiaMono.zip"
-$installPath = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+# Install CascadiaCode Nerd Font from repository
+$fontSourcePath = "$repoPath\CascadiaCode"
+$fontFiles = Get-ChildItem -Path $fontSourcePath -Filter "*.ttf"
+foreach ($fontFile in $fontFiles) {
+    Copy-Item -Force "$fontFile.FullName" -Destination "$fontInstallPath\$($fontFile.Name)"
+}
 
-# Download the font
-Invoke-WebRequest -Uri $nerdFontUrl -OutFile $tempPath
-
-# Unzip the font
-Expand-Archive -Path $tempPath -DestinationPath $installPath
-
-# Add the font to the registry
-$fontFiles = Get-ChildItem -Path $installPath -Filter "*.ttf"
+# Add the fonts to the registry
 foreach ($fontFile in $fontFiles) {
     $fontName = $fontFile.Name.Replace(".ttf", "")
-    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -Name "$fontName (TrueType)" -Value $fontFile.FullName -Force
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -Name "$fontName (TrueType)" -Value "$fontInstallPath\$($fontFile.Name)" -Force
 }
 
 # Copy Windows Terminal settings
-cp $HOME\terminal-configs\terminal-settings.json $HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Copy-Item -Force "$repoPath\terminal-settings.json" -Destination "$terminalSettingsPath\settings.json"
