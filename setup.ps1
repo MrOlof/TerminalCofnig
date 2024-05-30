@@ -1,5 +1,5 @@
 # Clone the repository
-git clone https://github.com/yourusername/terminal-configs.git $HOME\terminal-configs
+git clone https://github.com/MrOlof/terminal-configs.git
 
 # Copy Neovim configuration
 New-Item -ItemType Directory -Force -Path $HOME\AppData\Local\nvim
