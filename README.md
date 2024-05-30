@@ -1,1 +1,1 @@
-# TerminalCofnig
+# Terminal Config
