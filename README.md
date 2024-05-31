@@ -5,66 +5,60 @@
 
 ## SETUP
 
+Install Powershell via Microsoft Store
+import terminal-settings.json to $HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState
+
+```winget install Neovim.Neovim```
+
+Copy init.vim and main.py to 
+$HOME\AppData\Local\nvim
+
 Copy terminal json
 $HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState
 
 ```winget install Neovim.Neovim```
 
-Copy init.vim to 
-$HOME\Documents\terminal-configs\nvim\init.vim" -Destination "$nvimConfigPath\init.vim
-
 install Vim-Plug:
 ```iwr -useb https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim | ni "$HOME\AppData\Local\nvim\autoload\plug.vim" -Force ```
 
-nvim
-# Inside Neovim, type the following command and press Enter:
-:PlugInstall
+``` winget install --id Git.Git -e --source winget ```
 
-```winget install --id Git.Git -e --source winget```
+cd $HOME\AppData\Local\nvim
+nvim init.vim
+:pluginstall
 
+Optional:
 Create SSH Key
-d $HOME\.ssh
+dd $HOME\.ssh (or mkdir if path does not exist)
 ssh-keygen 
+Upload keys to developers settings in github
 
 nvim
 # Inside Neovim, type the following command and press Enter:
 :PlugInstall
 
-```winget install -e --id OpenJS.Node.JS```
-# Verify installation
+cd $HOME\AppData\Local\nvim-data\plugged\
+``` winget install -e --id OpenJS.NodeJS```
+# Verify installation - restart terminal first
 ```node -v``` 
 
+Install chocolatey:
+powershell admin and run:
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+Run as admin
 ```choco install nvm -y```
-
 cd $HOME\AppData\Local\nvim-data\plugged\coc.nvim
-npm install --global yarn
-
+```npm install --global yarn```
+````yarn --version````
 ````yarn install````
+yarn build
 
-nvim
-# Inside Neovim, type the following command and press Enter:
-:CocInstall coc-python
+cd $HOME\AppData\Local\nvim\ 
+nvim init.vim
 
-Copy-Item -Force "$HOME\Documents\terminal-configs\nvim\main.py" -Destination "$HOME\AppData\Local\nvim\main.py"
+````winget install JanDeDobbeleer.OhMyPosh -s winget````
+restart
 
-winget install JanDeDobbeleer.OhMyPosh -s winget
-
-
-# Create or edit your PowerShell profile
-echo $PROFILE
-# Make sure the directories exist
-mkdir -Force (Split-Path -Parent $PROFILE)
-# Open the profile in Neovim
-nvim $PROFILE
-
-cd $HOME\Documents
-mkdir -Force PowerShell
-Copy-Item -Force "$HOME\Documents\terminal-configs\powershell\Microsoft.PowerShell_profile.ps1" -Destination "$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-Copy-Item -Force "$HOME\Documents\terminal-configs\powershell\myprofile.omp.json" -Destination "$HOME\Documents\PowerShell\myprofile.omp.json"
-
-
-Install-Module -Name Terminal-Icons -Scope CurrentUser -Force
-Install-Module -Name z -Scope CurrentUser -Force
-Install-Module -Name PSReadLine -Scope CurrentUser -Force
-
+Echo $PROFILE (to check path for profile)
 
