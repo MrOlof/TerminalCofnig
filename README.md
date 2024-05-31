@@ -1,7 +1,6 @@
 # Terminal Config
 
-![Powershell2](https://github.com/MrOlof/terminal-configs/assets/100124559/e6a2fb29-0b07-4f24-8707-f16576470e53)
-
+![Powershell3](https://github.com/MrOlof/terminal-configs/assets/100124559/c25c480a-97e8-4b9d-a978-cfd4af09c726)
 
 
 ## SETUP
